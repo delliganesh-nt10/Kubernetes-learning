@@ -1,0 +1,74 @@
+##################################
+# Python
+##################################
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-wheel-metadata/
+*.egg-info/
+.eggs/
+
+##################################
+# Flask / Python env
+##################################
+.env
+.env.*
+instance/
+*.log
+
+##################################
+# Docker
+##################################
+*.tar
+docker-compose.override.yml
+
+##################################
+# Terraform (VERY IMPORTANT)
+##################################
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+##################################
+# Terraform variable files (secrets)
+##################################
+*.tfvars
+*.tfvars.json
+
+##################################
+# AWS
+##################################
+.aws/
+aws_credentials
+aws_config
+
+##################################
+# IDEs / Editors
+##################################
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+##################################
+# GitHub Actions
+##################################
+# (keep workflows, ignore local runners if any)
+.act/
+
+##################################
+# OS junk
+##################################
+Thumbs.db

@@ -6,6 +6,7 @@ module "eks_node_group" {
   cluster_version = module.eks.cluster_version
   subnet_ids      = module.vpc.private_subnets
 
+ cluster_service_ipv4_cidr = "172.20.0.0/16"
   name = "flask-notes-ng"
 
   instance_types = ["t3.small"]

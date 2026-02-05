@@ -10,6 +10,8 @@ module "eks" {
 
   enable_irsa = true
 
+   cluster_service_ipv4_cidr = "172.20.0.0/16"
+
   tags = {
     Project = "flask-notes"
   }

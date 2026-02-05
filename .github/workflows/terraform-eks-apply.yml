@@ -25,15 +25,15 @@ jobs:
 
       - name: Terraform Init
         run: |
-          cd Kubernetes-learning/terraform/eks
+          cd terraform/eks
           terraform init
 
       - name: Terraform Plan
         run: |
-          cd Kubernetes-learning/terraform/eks
+          cd terraform/eks
           terraform plan
 
       - name: Terraform Apply
         run: |
-          cd Kubernetes-learning/terraform/eks
+          cd terraform/eks
           terraform apply -auto-approve

@@ -10,7 +10,12 @@ module "eks" {
 
   enable_irsa = true
 
-   cluster_service_ipv4_cidr = "172.20.0.0/16"
+  # REQUIRED for node group validation
+  cluster_service_ipv4_cidr = "172.20.0.0/16"
+
+  # REQUIRED so kubectl works from your laptop
+  cluster_endpoint_public_access  = true
+  cluster_endpoint_private_access = true
 
   tags = {
     Project = "flask-notes"

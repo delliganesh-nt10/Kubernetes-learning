@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: flask
-          image: 393078901209.dkr.ecr.***.amazonaws.com/flask-notes-app:latest
+          image: 393078901209.dkr.ecr.us-east-1.amazonaws.com/flask-notes-app:latest
           ports:
             - containerPort: 5000
           envFrom:

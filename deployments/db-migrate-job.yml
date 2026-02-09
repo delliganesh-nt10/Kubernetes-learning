@@ -10,9 +10,15 @@ spec:
       containers:
         - name: migrate
           image: 393078901209.dkr.ecr.us-east-1.amazonaws.com/flask-notes-app:latest
+          command: ["python"]
+          args:
+            - "-c"
+            - |
+              from website import create_app, db
+              app = create_app()
+              with app.app_context():
+                  db.create_all()
+              print("DB migration completed")
           envFrom:
             - secretRef:
                 name: flask-notes-db
-          env:
-            - name: RUN_DB_MIGRATIONS
-              value: "true"

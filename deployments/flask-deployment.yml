@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-notes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-notes
+  template:
+    metadata:
+      labels:
+        app: flask-notes
+    spec:
+      containers:
+        - name: flask
+          image: 393078901209.dkr.ecr.***.amazonaws.com/flask-notes-app:latest
+          ports:
+            - containerPort: 5000
+          envFrom:
+            - secretRef:
+                name: flask-notes-db
+          env:
+            - name: FLASK_ENV
+              value: "production"
+            - name: RUN_DB_MIGRATIONS
+              value: "true"

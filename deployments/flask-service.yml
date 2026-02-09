@@ -3,9 +3,9 @@ kind: Service
 metadata:
   name: flask-notes
 spec:
+  type: LoadBalancer
   selector:
     app: flask-notes
   ports:
     - port: 80
       targetPort: 5000
-  type: ClusterIP

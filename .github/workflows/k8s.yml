@@ -20,17 +20,19 @@ jobs:
 
       - name: Install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-          chmod +x kubectl
-          sudo mv kubectl /usr/local/bin/
+            KUBECTL_VERSION=$(curl -L -s https://dl.k8s.io/release/stable.txt)
+            curl -LO https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl
+            chmod +x kubectl
+            sudo mv kubectl /usr/local/bin/kubectl
 
       - name: Update kubeconfig for EKS
         run: |
-          aws eks update-kubeconfig \
+            aws eks update-kubeconfig \
             --region ${{ secrets.AWS_REGION }} \
             --name flask-notes-eks
 
       - name: Deploy Kubernetes manifests
         run: |
-          cd deployments
-          kubectl apply -f .
+            cd deployments
+            kubectl apply -f .
+

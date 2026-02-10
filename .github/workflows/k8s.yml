@@ -31,8 +31,16 @@ jobs:
             --region ${{ secrets.AWS_REGION }} \
             --name flask-notes-eks
 
-      - name: Deploy Kubernetes manifests
+      - name: Apply Kubernetes Secrets
         run: |
-            cd deployments
-            kubectl apply -f .
+           kubectl apply -f deployments/rds-secrets.yml
 
+      - name: Run DB migrations
+        run: |
+           kubectl apply -f deployments/db-migrate-job.yml
+           kubectl wait --for=condition=complete job/flask-db-init --timeout=300s
+
+      - name: Deploy Flask app
+        run: |
+          kubectl apply -f deployments/flask-deployment.yml
+          kubectl apply -f deployments/flask-service.yml

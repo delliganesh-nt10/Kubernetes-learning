@@ -1,50 +1,128 @@
-# Flask-Web-App-with-MySQL-Database-Authentication-and-Notes-Feature
+Flask Notes – Production-Style EKS Deployment (Terraform + GitHub Actions)
+This repository contains a production-style DevOps implementation of a Flask web application deployed on AWS EKS, using Terraform for infrastructure provisioning and GitHub Actions for CI/CD.
 
-## A fully functional Example project written in Python showing how to create a Flask Web application that requests Database authentication and allows one to
+The focus of this project is infrastructure design, automation, and deployment workflows, not application feature development.
 
-### Introduction:
-This is a simple Flask web application that allows users to sign up, log in, and write and save notes. The application uses MySQL for storing user details and notes. It incorporates Flask for web development, Werkzeug for password hashing, Flask-Login for user session management, and SQLAlchemy for database interaction.
+🏗️ Architecture Overview
+scss
+￼Copy code
+GitHub Actions
+   │
+   ├── Terraform (S3 + DynamoDB backend)
+   │     ├── VPC
+   │     ├── EKS Cluster + Managed Node Group
+   │     ├── RDS MySQL (private subnets)
+   │     └── ECR Repository
+   │
+   └── Kubernetes (EKS)
+         ├── DB migration Job
+         ├── Flask Deployment
+         └── LoadBalancer Service
+📁 Repository Structure
+graphql
+￼Copy code
+.
+├── terraform/
+│   ├── backend/        # S3 + DynamoDB for Terraform remote state
+│   ├── ecr/            # ECR repository for Docker images
+│   ├── Eks/            # VPC + EKS cluster + node group
+│   └── rds/            # RDS MySQL (private, not public)
+│
+├── deployments/
+│   ├── flask-deployment.yml   # Flask application Deployment
+│   ├── flask-service.yml      # LoadBalancer Service
+│   ├── db-migrate-job.yml     # One-time DB initialization Job
+│   └── rds-secrets.yml        # Kubernetes Secret (current state)
+│
+├── .github/workflows/
+│   ├── terraform-backend-apply.yml
+│   ├── terraform-ecr-apply.yml
+│   ├── terraform-eks-apply.yml
+│   ├── terraform-rds-apply.yml
+│   ├── terraform-*-destroy.yml
+│   ├── ecr-push.yml
+│   └── k8s.yml
+│
+└── README.md
+🚀 What This Project Currently Does
 
-### Prerequisites:
-* Make sure you have Python and pip installed on your machine. You can use an IDE of your choice but I suggest Pycharm for this project
-* Make sure you download XAMPP to connect to MySQL. https://www.apachefriends.org/download.html
-* Open PHPMYADMIN using this url link on your browser http://localhost/phpmyadmin
+Infrastructure (Terraform)
+Creates an S3 backend with DynamoDB state locking
+Provisions a custom VPC with public & private subnets
+Deploys an EKS cluster with managed node groups
+Creates a private RDS MySQL instance
+Creates an ECR repository with image lifecycle policies
+Uses separate Terraform states per component
+CI/CD (GitHub Actions)
+Manually triggered workflows (workflow_dispatch)
 
-### Install the required dependencies and libraries:
-```pip install -r requirements.txt```
+Terraform:
 
-```pip install Flask Flask-Login Flask-SQLAlchemy mysql-connector-python```
+Plan & apply per stack (backend, ECR, EKS, RDS)
+Independent destroy workflows
+Application:
+Build Docker image
+Push image to ECR
+Deploy to EKS
+Run DB migration job before app deployment
 
-### Create the MySQL database:
-Your can create MYSQL database inside PHPMYADMIN
+Kubernetes
 
-### Connecting to the database to perform CRUD functions:
-SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://username:password@localhost/database_name'
-- _Replace username, password, and database_name with your MySQL credentials._
-
-### Run the Flask application on Pycharm:
-Run python main.py
-- Visit http://127.0.0.1:5000 in your web browser.
-
-### Usage:
-1. Open the web app and sign up for a new account.
-2. Log in with your credentials.
-3. Navigate to the homepage to write and save notes.
-
-### Libraries Used
-- Flask: A web framework for Python.
-- Flask-Login: Provides user session management for Flask.
-- Flask-SQLAlchemy: Adds SQLAlchemy support to Flask.
-- Werkzeug: A WSGI utility library for Python.
-
-### Additional Notes:
-1. User passwords are hashed using Werkzeug for security.
-2. SQLAlchemy is used to interact with the MySQL database.
-3. User input is validated using Python validation processes.
-
-#### Author
-
-Gabriel Mokhele
+Flask app deployed as a Deployment
+DB schema initialized via a Kubernetes Job
+Exposed using a LoadBalancer Service
+Environment variables injected via Kubernetes Secret
 
 
-Feel free to add any home page of your choice and implement backend python code to add functionality to its front end with additional features like CSS & JS static files etc.
+🛠️ Deployment Order (Required)
+
+Infrastructure must be created in this order:
+Terraform backend (S3 + DynamoDB)
+ECR repository
+EKS cluster
+RDS database
+Build & push Docker image
+
+Deploy to Kubernetes
+
+📌 How to Deploy (High-Level)
+
+1. Configure GitHub Secrets
+
+Required secrets:
+AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY
+AWS_REGION
+ECR_REPOSITORY
+TF_VAR_db_password
+
+2. Run Terraform Workflows
+Trigger workflows manually from GitHub Actions:
+
+terraform-backend-apply
+terraform-ecr-apply
+terraform-eks-apply
+terraform-rds-apply
+
+3. Build & Push Image
+Run:
+ecr-push.yml
+
+4. Deploy to Kubernetes
+Run:
+k8s.yml
+
+🧪 Database Migration Strategy
+Database schema is created using a Kubernetes Job
+
+The job runs:
+
+python
+db.create_all()
+Job is deleted and recreated on every deployment
+Application deployment happens only after job completion
+
+This ensures:
+DB exists before app starts
+No race conditions on first deploy
+

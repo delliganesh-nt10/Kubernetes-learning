@@ -37,10 +37,12 @@ jobs:
 
       - name: Run DB migrations
         run: |
+           kubectl delete job flask-db-init --ignore-not-found
            kubectl apply -f deployments/db-migrate-job.yml
            kubectl wait --for=condition=complete job/flask-db-init --timeout=300s
 
+
       - name: Deploy Flask app
         run: |
-          kubectl apply -f deployments/flask-deployment.yml
-          kubectl apply -f deployments/flask-service.yml
+           kubectl apply -f deployments/flask-deployment.yml
+           kubectl apply -f deployments/flask-service.yml

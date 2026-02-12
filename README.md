@@ -1,4 +1,4 @@
-Flask Notes – Production-Style EKS Deployment (Terraform + GitHub Actions)
+Flask Notes – EKS Deployment (Terraform + GitHub Actions)
 This repository contains a production-style DevOps implementation of a Flask web application deployed on AWS EKS, using Terraform for infrastructure provisioning and GitHub Actions for CI/CD.
 
 The focus of this project is infrastructure design, automation, and deployment workflows, not application feature development.

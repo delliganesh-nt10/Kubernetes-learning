@@ -44,6 +44,6 @@ jobs:
           helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
             --namespace monitoring \
             --create-namespace \
-            -f helm/monitoring/values.yaml \
+            -f helm/monitoring/values.yml \
             --set grafana.adminPassword=${{ secrets.GRAFANA_ADMIN_PASSWORD }}
 
